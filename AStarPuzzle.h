@@ -30,7 +30,7 @@ private:
 	void MoveBlankToRight(StateNode* root);
 	void MoveBlankToUp(StateNode* root);
 	void MoveBlankToDown(StateNode* root);
-	void FindMinH(StateNode* some, StateNode*& min, int& minIndex);
+	void FindMinF(StateNode* some, StateNode*& min, int& minIndex);
 	void popAndExplore(int indexToPop);
 	bool isFinal(StateNode* ToCheck);
 };

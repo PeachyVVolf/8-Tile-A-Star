@@ -156,14 +156,20 @@ void AStarPuzzle::MoveBlankToDown(StateNode* root)
 	pushInOpen(newNode, root);
 }
 
-void AStarPuzzle::FindMinH(StateNode* some, StateNode*& min, int& minIndex)
+void AStarPuzzle::FindMinF(StateNode* some, StateNode*& min, int& minIndex)
 {
+	int firstF, secondF, thirdF;
+	secondF = some->g + some->h;
 	for (int i = 0; i < openIndex; i++) {
 		if (openList[i] != NULL) {
-			if (openList[i]->h <= some->h) {
-				if (min != NULL && min->h > openList[i]->h) {
-					min = openList[i];
-					minIndex = i;
+			firstF = openList[i]->g + openList[i]->h;
+			if (firstF <= secondF) {
+				if (min != NULL) {
+					thirdF = min->g + min->h;
+					if (thirdF > firstF) {
+						min = openList[i];
+						minIndex = i;
+					}
 				}
 				else if (min == NULL) {
 					min = openList[i];
@@ -176,9 +182,10 @@ void AStarPuzzle::FindMinH(StateNode* some, StateNode*& min, int& minIndex)
 					min = openList[i];
 				}
 				else {
-					if (min->h > openList[i]->h) {
-						minIndex = i;
+					thirdF = min->g + min->h;
+					if (thirdF > firstF) {
 						min = openList[i];
+						minIndex = i;
 					}
 				}
 
@@ -219,7 +226,7 @@ void AStarPuzzle::popAndExplore(int indexToPop)
 				StateNode* min = NULL;
 				int minIndex = totalSize;
 
-				FindMinH(some, min, minIndex);
+				FindMinF(some, min, minIndex);
 				popAndExplore(minIndex);
 			}
 		}
