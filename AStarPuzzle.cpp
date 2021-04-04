@@ -2,6 +2,7 @@
 
 void AStarPuzzle::makeFinalState()
 {
+	FinalState = new StateNode();
 	FinalState->current->array[0][0] = 1;
 	FinalState->current->array[0][1] = 2;
 	FinalState->current->array[0][2] = 3;
@@ -80,7 +81,7 @@ void AStarPuzzle::MoveBlankToLeft(StateNode* root)
 	int indexI = root->current->emptySpacei;
 	int indexJ = root->current->emptySpacej;
 
-	StateNode* newNode = new StateNode(*root);
+	StateNode* newNode = new StateNode(*root->current);
 
 	int emptySpace = newNode->current->array[indexI][indexJ];
 	int number = newNode->current->array[indexI][indexJ - 1];
@@ -100,7 +101,7 @@ void AStarPuzzle::MoveBlankToRight(StateNode* root)
 	int indexI = root->current->emptySpacei;
 	int indexJ = root->current->emptySpacej;
 
-	StateNode* newNode = new StateNode(*root);
+	StateNode* newNode = new StateNode(*root->current);
 
 	int emptySpace = newNode->current->array[indexI][indexJ];
 	int number = newNode->current->array[indexI][indexJ + 1];
@@ -120,7 +121,7 @@ void AStarPuzzle::MoveBlankToUp(StateNode* root)
 	int indexI = root->current->emptySpacei;
 	int indexJ = root->current->emptySpacej;
 
-	StateNode* newNode = new StateNode(*root);
+	StateNode* newNode = new StateNode(*root->current);
 
 	int emptySpace = newNode->current->array[indexI][indexJ];
 	int number = newNode->current->array[indexI - 1][indexJ];
@@ -140,7 +141,7 @@ void AStarPuzzle::MoveBlankToDown(StateNode* root)
 	int indexI = root->current->emptySpacei;
 	int indexJ = root->current->emptySpacej;
 
-	StateNode* newNode = new StateNode(*root);
+	StateNode* newNode = new StateNode(*root->current);
 
 	int emptySpace = newNode->current->array[indexI][indexJ];
 	int number = newNode->current->array[indexI + 1][indexJ];
@@ -155,10 +156,45 @@ void AStarPuzzle::MoveBlankToDown(StateNode* root)
 	pushInOpen(newNode, root);
 }
 
+void AStarPuzzle::FindMinH(StateNode* some, StateNode*& min, int& minIndex)
+{
+	for (int i = 0; i < openIndex; i++) {
+		if (openList[i] != NULL) {
+			if (openList[i]->h <= some->h) {
+				if (min != NULL && min->h > openList[i]->h) {
+					min = openList[i];
+					minIndex = i;
+				}
+				else if (min == NULL) {
+					min = openList[i];
+					minIndex = i;
+				}
+			}
+			else {
+				if (min == NULL) {
+					minIndex = i;
+					min = openList[i];
+				}
+				else {
+					if (min->h > openList[i]->h) {
+						minIndex = i;
+						min = openList[i];
+					}
+				}
+
+			}
+		}
+	}
+}
+
 void AStarPuzzle::popAndExplore(int indexToPop)
 {
 	if (!openList == NULL) {
 		StateNode* some = openList[indexToPop];
+		if (isFinal(some)) {
+			cout << "Final Reached" << endl;
+			exit(EXIT_SUCCESS);
+		}
 
 		if (!searchInClosed(some)) {
 			if (some->current->emptySpacej > 0) //move left
@@ -175,23 +211,20 @@ void AStarPuzzle::popAndExplore(int indexToPop)
 				MoveBlankToDown(some);
 			}
 
-
 			openList[indexToPop] = NULL;
 			closeList[closeIndex] = some;
 			closeIndex++;
 
-			StateNode* min = NULL;
-			int minIndex = 0;
-			for (int i = 0; i < openIndex; i++) {
-				if (openList[i]->h <= some->h) {
-					if (min != NULL && min->h <= openList[i]->h) {
-						min = openList[i];
-						minIndex = i;
-					}
-				}
-			}
+			while (openList != NULL) {
+				StateNode* min = NULL;
+				int minIndex = totalSize;
 
-			popAndExplore(i);
+				FindMinH(some, min, minIndex);
+				popAndExplore(minIndex);
+			}
+		}
+		else {
+			openList[indexToPop] = NULL;
 		}
 	}
 

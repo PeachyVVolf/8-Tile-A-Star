@@ -8,7 +8,7 @@ public:
 	states* current;
 	StateNode* parent;
 	int g = 0;
-	int h = 9;
+	int h = 0;
 
 
 	StateNode() { //default constructor

@@ -5,7 +5,7 @@ using namespace std;
 #define totalSize  1000
 
 class AStarPuzzle {
-
+public:
 	StateNode* root;
 	StateNode* FinalState;
 	StateNode* openList[totalSize];
@@ -18,6 +18,7 @@ class AStarPuzzle {
 		root = new StateNode();
 		makeFinalState();
 		pushInOpen(root, NULL);
+		popAndExplore(0);
 	}
 
 private:
@@ -29,6 +30,7 @@ private:
 	void MoveBlankToRight(StateNode* root);
 	void MoveBlankToUp(StateNode* root);
 	void MoveBlankToDown(StateNode* root);
+	void FindMinH(StateNode* some, StateNode*& min, int& minIndex);
 	void popAndExplore(int indexToPop);
 	bool isFinal(StateNode* ToCheck);
 };

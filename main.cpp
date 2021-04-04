@@ -1,9 +1,8 @@
-#include "StateNode.h"
+#include "AStarPuzzle.h"
 #include <iostream>
 
 using namespace std;
 
 int main() {
-	StateNode mainPuzzle;
-	mainPuzzle.current->print();
+	AStarPuzzle mainPuzzle;
 }
