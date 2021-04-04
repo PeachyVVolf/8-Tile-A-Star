@@ -1,6 +1,5 @@
 #pragma once
 #include "StateNode.h"
-#include <list>
 using namespace std;
 
 #define totalSize  1000
@@ -9,8 +8,8 @@ class AStarPuzzle {
 
 	StateNode* root;
 	StateNode* FinalState;
-	list <StateNode*> openList[totalSize];
-	list <StateNode*> closeList[totalSize];
+	StateNode* openList[totalSize];
+	StateNode* closeList[totalSize];
 
 	int openIndex = 0;
 	int closeIndex = 0;
@@ -26,5 +25,10 @@ private:
 	void calculateGH (StateNode* ToPush, StateNode* parent);
 	void pushInOpen(StateNode* ToPush, StateNode* parent);
 	bool searchInClosed(StateNode* ToFind);
-	void popAndExplore();
+	void MoveBlankToLeft(StateNode* root);
+	void MoveBlankToRight(StateNode* root);
+	void MoveBlankToUp(StateNode* root);
+	void MoveBlankToDown(StateNode* root);
+	void popAndExplore(int indexToPop);
+	bool isFinal(StateNode* ToCheck);
 };
